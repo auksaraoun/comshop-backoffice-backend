@@ -10,4 +10,11 @@ use Illuminate\Notifications\Notifiable;
 class AdminUser extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens;
+
+    protected $fillable = [
+        "name",
+        "email",
+        "password",  
+        "username"
+    ];
 }

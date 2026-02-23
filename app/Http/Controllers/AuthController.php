@@ -19,12 +19,11 @@ class AuthController extends Controller
         }
 
         $admin = Auth::user();
-        $token = $admin->createToken('admin-token', ['role:admin'])->plainTextToken;
+        $admin->createToken('admin-token', ['role:admin']);
 
         return response()->json([
             'success' => true,
             'message' => 'Login Successfully',
-            'token' => $token
         ]);
     }
 }
