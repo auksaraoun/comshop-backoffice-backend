@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Utils\ApiResponse;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\AuthenticationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,14 +17,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(function (Request $request, Throwable $e) {
             return $request->is('api/*');
         });
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
-            if ($request->is('api/*')) {
+            if ($request->is('api/*')) {                                                            
                 return app(ApiResponse::class)->fail('Not found data you looking for', 404);
             }
         });
@@ -35,5 +36,11 @@ return Application::configure(basePath: dirname(__DIR__))
                     ['errors' => $e->errors()]
                 );
             }
+        });
+        $exceptions->render(function (AuthenticationException $e, Request $request) {
+        return app(ApiResponse::class)->fail(
+                'Unauthenticated',
+                401,
+            );
         });
     })->create();

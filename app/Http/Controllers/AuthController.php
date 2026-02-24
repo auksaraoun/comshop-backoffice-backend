@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Http\Resources\AdminUserResource;
+use App\Utils\ApiResponse;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        private ApiResponse $response
+    ){}
+
     public function authenticate(LoginRequest $request)
     {
         $credentials = $request->only('username', 'password');
@@ -26,4 +32,13 @@ class AuthController extends Controller
             'message' => 'Login Successfully',
         ]);
     }
+
+    public function fetchAuth(){
+        $adminUser = auth('web')->user();
+        return $this->response->success(
+            new AdminUserResource($adminUser),
+            'Fetch Admin user success',
+        );
+    }
+
 }
