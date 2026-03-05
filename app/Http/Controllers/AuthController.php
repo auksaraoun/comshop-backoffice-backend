@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Resources\AdminUserResource;
 use App\Utils\ApiResponse;
@@ -20,7 +21,7 @@ class AuthController extends Controller
         if (!Auth::attempt($credentials)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Unauthorized'
+                'message' => 'ชื่อหรือรหัสผ่านไม่ถูกต้อง'
             ], 401);
         }
 
@@ -33,11 +34,26 @@ class AuthController extends Controller
         ]);
     }
 
-    public function fetchAuth(){
+    public function fetchAuth()
+    {
         $adminUser = auth('web')->user();
         return $this->response->success(
             new AdminUserResource($adminUser),
             'Fetch Admin user success',
+        );
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+ 
+        $request->session()->invalidate();
+ 
+        $request->session()->regenerateToken();
+        
+        return $this->response->success(
+            null,
+            'Log Out success',
         );
     }
 

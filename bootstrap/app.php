@@ -43,4 +43,5 @@ return Application::configure(basePath: dirname(__DIR__))
                 401,
             );
         });
-    })->create();
+    })
+    ->create();
