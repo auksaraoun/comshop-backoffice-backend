@@ -22,7 +22,7 @@ class IndexAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "search"=> "nullable|max:255f",
+            "search"=> "nullable|max:255",
             "page"=> "nullable|numeric|min:1",
             "per_page"=> "nullable|numeric|min:1",
         ];

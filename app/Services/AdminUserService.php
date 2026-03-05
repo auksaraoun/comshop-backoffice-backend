@@ -20,7 +20,8 @@ class AdminUserService{
             });
         }
 
-        return $query->paginate($per_page);
+        return $query->orderBy('id','asc')
+                    ->paginate($per_page);
     }
 
     public function storeAdminUser(array $data): AdminUser{
