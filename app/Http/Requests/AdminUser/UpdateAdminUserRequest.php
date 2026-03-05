@@ -3,6 +3,7 @@
 namespace App\Http\Requests\AdminUser;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateAdminUserRequest extends FormRequest
 {
@@ -23,8 +24,21 @@ class UpdateAdminUserRequest extends FormRequest
     {
         return [
             'name' => 'nullable|max:255',
-            'username' => 'sometimes|required|unique:admin_users|max:255|min:4',
-            'email' => 'sometimes|required|unique:admin_users|max:255|min:4|email',
+            'username' => [
+                'sometimes',
+                'required',
+                'max:255',
+                'min:4',
+                Rule::unique('admin_users')->ignore($this->route('admin_user')),
+            ],
+            'email' => [
+                'sometimes',
+                'required',
+                'max:255',
+                'min:4',
+                'email',
+                Rule::unique('admin_users')->ignore($this->route('admin_user')),
+            ],
             'password' => 'sometimes|required|max:255|min:4|confirmed'
         ];
     }

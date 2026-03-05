@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Http\Requests\AdminUser\IndexAdminRequest;
 use App\Http\Requests\AdminUser\StoreAdminUserRequest;
 use App\Http\Requests\AdminUser\UpdateAdminUserRequest;
 use App\Http\Requests\AdminUser\UpdatePasswordAdminUserRequest;
 use App\Http\Resources\AdminUserResource;
+use App\Models\AdminUser;
 use App\Services\AdminUserService;
 use App\Utils\ApiResponse;
-use App\Models\AdminUser;
+use Illuminate\Http\JsonResponse;
 
 class AdminUserController extends Controller
 {
     public function __construct(
         private ApiResponse $response,
         private AdminUserService $adminUserService,
-    ){}
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -25,9 +25,10 @@ class AdminUserController extends Controller
     public function index(IndexAdminRequest $request): JsonResponse
     {
         $validate = $request->validated();
-        $search = $validate["search"] ?? "";
-        $per_page = $validate["per_page"] ?? 30; 
+        $search = $validate['search'] ?? '';
+        $per_page = $validate['per_page'] ?? 30;
         $adminUsers = $this->adminUserService->getAdminUsers($search, $per_page);
+
         return $this->response->success(
             AdminUserResource::collection($adminUsers),
             'Fetch Admin Users success',
@@ -59,14 +60,12 @@ class AdminUserController extends Controller
         );
     }
 
-
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateAdminUserRequest $request, AdminUser $adminUser): JsonResponse
     {
         $data = $request->validated();
-
         $adminUser = $this->adminUserService->updateAdminUser($data, $adminUser);
 
         return $this->response->success(
@@ -80,6 +79,7 @@ class AdminUserController extends Controller
         $data = $request->validated();
         $password = $data['password'];
         $this->adminUserService->updatePasswordAdminUser($password, $adminUser);
+
         return $this->response->success(
             null,
             "Update password's admin user success",
@@ -93,6 +93,7 @@ class AdminUserController extends Controller
     public function destroy(AdminUser $adminUser): JsonResponse
     {
         $adminUser->delete();
+
         return $this->response->success(
             null,
             'Delete admin user success',
