@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminUserService
 {
-    public function getAdminUsers(string $search, int $per_page = 30): LengthAwarePaginator
+    public function getAdminUsers(string $search, int $per_page, ?string $sort_by = null, ?string $sort_order = null): LengthAwarePaginator
     {
         $query = AdminUser::select('admin_users.*');
 
@@ -20,7 +20,13 @@ class AdminUserService
             });
         }
 
-        $paginator = $query->orderBy('id', 'asc')->paginate($per_page);
+        if ($sort_order && $sort_by) {
+            $query->orderBy($sort_by, $sort_order);
+        } else {
+            $query->orderBy('id', 'asc');
+        }
+
+        $paginator = $query->paginate($per_page);
 
         if ($paginator->currentPage() > $paginator->lastPage()) {
             request()->merge(['page' => $paginator->lastPage()]);

@@ -10,12 +10,21 @@ class AdminUserTest extends TestCase
 {
     use RefreshDatabase;
 
+    private AdminUser $authUser;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->authUser = AdminUser::factory()->create();
+        $this->actingAs($this->authUser, 'web');
+    }
+
     // ทดสอบ index
     public function test_can_fetch_admin_users(): void
     {
         AdminUser::factory()->count(3)->create();
 
-        $response = $this->getJson('/api/admin_users');
+        $response = $this->getJson('/api/admin-users');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -39,7 +48,7 @@ class AdminUserTest extends TestCase
             'password_confirmation' => 'password123',
         ];
 
-        $response = $this->postJson('/api/admin_users', $payload);
+        $response = $this->postJson('/api/admin-users', $payload);
 
         $response->assertStatus(200)
             ->assertJsonPath('success', true)
@@ -57,13 +66,14 @@ class AdminUserTest extends TestCase
         AdminUser::factory()->create(['email' => 'john@example.com']);
 
         $payload = [
+            'name' => 'John Doe',
             'username' => 'johndoe2',
             'email' => 'john@example.com', // ซ้ำ
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ];
 
-        $response = $this->postJson('/api/admin_users', $payload);
+        $response = $this->postJson('/api/admin-users', $payload);
 
         $response->assertStatus(422)
             ->assertJsonPath('success', false);
@@ -74,7 +84,7 @@ class AdminUserTest extends TestCase
     {
         $adminUser = AdminUser::factory()->create();
 
-        $response = $this->getJson("/api/admin_users/{$adminUser->id}");
+        $response = $this->getJson("/api/admin-users/{$adminUser->id}");
 
         $response->assertStatus(200)
             ->assertJsonPath('data.id', $adminUser->id);
@@ -83,7 +93,7 @@ class AdminUserTest extends TestCase
     // ทดสอบ show 404
     public function test_returns_404_when_admin_user_not_found(): void
     {
-        $response = $this->getJson('/api/admin_users/999');
+        $response = $this->getJson('/api/admin-users/999');
 
         $response->assertStatus(404)
             ->assertJsonPath('success', false);
@@ -94,7 +104,7 @@ class AdminUserTest extends TestCase
     {
         $adminUser = AdminUser::factory()->create();
 
-        $response = $this->patchJson("/api/admin_users/{$adminUser->id}", [
+        $response = $this->patchJson("/api/admin-users/{$adminUser->id}", [
             'name' => 'Updated Name',
         ]);
 
@@ -107,7 +117,7 @@ class AdminUserTest extends TestCase
     {
         $adminUser = AdminUser::factory()->create();
 
-        $response = $this->patchJson("/api/admin_users/{$adminUser->id}/password", [
+        $response = $this->patchJson("/api/admin-users/{$adminUser->id}/password", [
             'password' => 'newpassword',
             'password_confirmation' => 'newpassword',
         ]);
@@ -121,11 +131,11 @@ class AdminUserTest extends TestCase
     {
         $adminUser = AdminUser::factory()->create();
 
-        $response = $this->deleteJson("/api/admin_users/{$adminUser->id}");
+        $response = $this->deleteJson("/api/admin-users/{$adminUser->id}");
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseMissing('admin_users', [
+        $this->assertSoftDeleted('admin_users', [
             'id' => $adminUser->id,
         ]);
     }

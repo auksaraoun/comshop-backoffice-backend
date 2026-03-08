@@ -11,6 +11,7 @@ use App\Models\AdminUser;
 use App\Services\AdminUserService;
 use App\Utils\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class AdminUserController extends Controller
 {
@@ -27,7 +28,9 @@ class AdminUserController extends Controller
         $validate = $request->validated();
         $search = $validate['search'] ?? '';
         $per_page = $validate['per_page'] ?? 30;
-        $adminUsers = $this->adminUserService->getAdminUsers($search, $per_page);
+        $sort_by = $validate['sort_by'] ?? null;
+        $sort_order = $validate['sort_order'] ?? null;
+        $adminUsers = $this->adminUserService->getAdminUsers($search, $per_page, $sort_by, $sort_order);
 
         return $this->response->success(
             AdminUserResource::collection($adminUsers),
@@ -92,6 +95,10 @@ class AdminUserController extends Controller
      */
     public function destroy(AdminUser $adminUser): JsonResponse
     {
+        if (Auth::guard('web')->user()?->id === $adminUser->id) {
+            return $this->response->fail('Cannot delete your own account', 403);
+        }
+
         $adminUser->delete();
 
         return $this->response->success(
