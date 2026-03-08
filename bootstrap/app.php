@@ -1,13 +1,14 @@
 <?php
 
+use App\Http\Middleware\AcceptJson;
+use App\Utils\ApiResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use App\Utils\ApiResponse;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->append(AcceptJson::class);
         $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -24,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             return $request->is('api/*');
         });
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
-            if ($request->is('api/*')) {                                                            
+            if ($request->is('api/*')) {
                 return app(ApiResponse::class)->fail('Not found data you looking for', 404);
             }
         });
@@ -38,7 +40,7 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
         $exceptions->render(function (AuthenticationException $e, Request $request) {
-        return app(ApiResponse::class)->fail(
+            return app(ApiResponse::class)->fail(
                 'Unauthenticated',
                 401,
             );
