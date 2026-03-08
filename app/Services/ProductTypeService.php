@@ -13,7 +13,7 @@ class ProductTypeService
 
         if ($search) {
             $query->where(function ($query) use ($search) {
-                $query->where('name', 'like', '%'.$search.'%');
+                $query->where('name', 'ILIKE', '%'.$search.'%');
             });
         }
 

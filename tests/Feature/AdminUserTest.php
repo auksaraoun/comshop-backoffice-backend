@@ -31,9 +31,9 @@ class AdminUserTest extends TestCase
                 'success',
                 'message',
                 'data' => [
-                    '*' => ['id', 'name', 'username', 'email']
+                    '*' => ['id', 'name', 'username', 'email'],
                 ],
-                'meta' => ['current_page', 'per_page', 'total', 'last_page']
+                'meta' => ['current_page', 'per_page', 'total', 'last_page'],
             ]);
     }
 

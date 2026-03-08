@@ -9,7 +9,7 @@ use App\Http\Resources\ProductTypeResource;
 use App\Models\ProductType;
 use App\Services\ProductTypeService;
 use App\Utils\ApiResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Illuminate\Http\JsonResponse;
 
 class ProductTypeController extends Controller
 {

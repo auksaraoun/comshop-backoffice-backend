@@ -14,9 +14,9 @@ class AdminUserService
 
         if ($search) {
             $query->where(function ($query) use ($search) {
-                $query->where('name', 'like', '%'.$search.'%');
-                $query->orWhere('username', 'like', '%'.$search.'%');
-                $query->orWhere('email', 'like', '%'.$search.'%');
+                $query->where('name', 'ILIKE', '%'.$search.'%');
+                $query->orWhere('username', 'ILIKE', '%'.$search.'%');
+                $query->orWhere('email', 'ILIKE', '%'.$search.'%');
             });
         }
 

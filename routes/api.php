@@ -12,7 +12,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::resource('/admin-users', AdminUserController::class);
-    Route::patch('/admin-users/{id}/password', [AdminUserController::class, 'updatePassword']);
+    Route::patch('/admin-users/{admin_user}/password', [AdminUserController::class, 'updatePassword']);
 
     Route::resource('/product-types', ProductTypeController::class);
 });
