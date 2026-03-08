@@ -39,7 +39,6 @@ class UpdateAdminUserRequest extends FormRequest
                 'email',
                 Rule::unique('admin_users')->ignore($this->route('admin_user')),
             ],
-            'password' => 'sometimes|required|max:255|min:4|confirmed'
         ];
     }
 }
