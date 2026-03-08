@@ -25,6 +25,8 @@ class IndexAdminRequest extends FormRequest
             'search' => 'nullable|max:255',
             'page' => 'nullable|numeric|min:1',
             'per_page' => 'nullable|numeric|min:1',
+            'sort_by' => 'nullable|in:id,name,username,email,created_at,updated_at',
+            'sort_order' => 'nullable|in:asc,desc',
         ];
     }
 }
