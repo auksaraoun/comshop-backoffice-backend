@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\ProductType;
+use App\Models\Brand;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class ProductTypeService
+class BrandService
 {
-    public function getProductTypes(string $search, int $per_page, ?string $sort_by = null, ?string $sort_order = null): LengthAwarePaginator
+    public function getBrands(string $search, int $per_page, ?string $sort_by = null, ?string $sort_order = null): LengthAwarePaginator
     {
-        $query = ProductType::select('*');
+        $query = Brand::select('*');
 
         if ($search) {
             $query->where(function ($query) use ($search) {
@@ -28,20 +28,19 @@ class ProductTypeService
         return $paginator;
     }
 
-    public function storeProductType(array $data, int $admin_id): ProductType
+    public function storeBrand(array $data): Brand
     {
-        return ProductType::create([
+        return Brand::create([
             'name' => $data['name'],
-            'admin_id' => $admin_id,
         ]);
     }
 
-    public function updateProductType(array $data, ProductType $productType): ProductType
+    public function updateBrand(array $data, Brand $brand): Brand
     {
-        $productType->update([
+        $brand->update([
             'name' => $data['name'],
         ]);
 
-        return $productType->fresh();
+        return $brand->fresh();
     }
 }

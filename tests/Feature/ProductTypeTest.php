@@ -32,9 +32,9 @@ class ProductTypeTest extends TestCase
                 'success',
                 'message',
                 'data' => [
-                    '*' => ['id', 'name', 'admin_id', 'created_at', 'updated_at']
+                    '*' => ['id', 'name', 'admin_id', 'created_at', 'updated_at'],
                 ],
-                'meta' => ['current_page', 'per_page', 'total', 'last_page']
+                'meta' => ['current_page', 'per_page', 'total', 'last_page'],
             ]);
     }
 
@@ -67,7 +67,7 @@ class ProductTypeTest extends TestCase
             ->assertJsonPath('data.admin_id', $this->authUser->id);
 
         $this->assertDatabaseHas('product_types', [
-            'name'     => 'Motherboard',
+            'name' => 'Motherboard',
             'admin_id' => $this->authUser->id,
         ]);
     }
@@ -127,7 +127,7 @@ class ProductTypeTest extends TestCase
             ->assertJsonPath('data.name', 'DDR5 RAM');
 
         $this->assertDatabaseHas('product_types', [
-            'id'   => $productType->id,
+            'id' => $productType->id,
             'name' => 'DDR5 RAM',
         ]);
     }

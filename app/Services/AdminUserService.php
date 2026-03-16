@@ -10,7 +10,7 @@ class AdminUserService
 {
     public function getAdminUsers(string $search, int $per_page, ?string $sort_by = null, ?string $sort_order = null): LengthAwarePaginator
     {
-        $query = AdminUser::select('admin_users.*');
+        $query = AdminUser::select('*');
 
         if ($search) {
             $query->where(function ($query) use ($search) {
@@ -27,12 +27,6 @@ class AdminUserService
         }
 
         $paginator = $query->paginate($per_page);
-
-        if ($paginator->currentPage() > $paginator->lastPage()) {
-            request()->merge(['page' => $paginator->lastPage()]);
-
-            return $query->paginate($per_page);
-        }
 
         return $paginator;
     }
