@@ -36,6 +36,16 @@ class ProductTypeController extends Controller
         );
     }
 
+    public function getDataAll()
+    {
+        $productTypes = $this->productTypeService->getProductTypesAll();
+
+        return $this->response->success(
+            ProductTypeResource::collection($productTypes),
+            'Fetch Product Types success',
+        );
+    }
+
     /**
      * Store a newly created resource in storage.
      */
