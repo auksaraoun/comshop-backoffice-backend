@@ -28,6 +28,11 @@ class ProductTypeService
         return $paginator;
     }
 
+    public function getProductTypesAll()
+    {
+        return ProductType::orderBy('name', 'asc')->get();
+    }
+
     public function storeProductType(array $data, int $admin_id): ProductType
     {
         return ProductType::create([
