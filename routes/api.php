@@ -15,6 +15,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::resource('/admin-users', AdminUserController::class);
     Route::patch('/admin-users/{admin_user}/password', [AdminUserController::class, 'updatePassword']);
 
+    Route::get('/product-types/all', [ProductTypeController::class, 'getDataAll']);
     Route::resource('/product-types', ProductTypeController::class);
     Route::resource('/brands', BrandController::class);
 });
