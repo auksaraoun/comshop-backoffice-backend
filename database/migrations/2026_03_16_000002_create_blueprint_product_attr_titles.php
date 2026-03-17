@@ -6,19 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('blueprint_product_attrs', function (Blueprint $table) {
+        Schema::create('blueprint_product_attr_titles', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('title_id')->constrained('blueprint_product_attr_titles');
-            $table->enum('type', ['text', 'select']);
+            $table->foreignId('group_id')->constrained('blueprint_product_attr_groups');
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('blueprint_product_attrs');
+        Schema::dropIfExists('blueprint_product_attr_titles');
     }
 };
